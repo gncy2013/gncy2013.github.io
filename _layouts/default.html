@@ -1,29 +1,31 @@
 <!DOCTYPE html>
 <html>
-<head>
-
-<link rel="stylesheet" href="/contents/css/responsive-nav.css">
-<script src="/contents/js/responsive-nav.js"></script>
-
-<div id="nav">
-	<ul>
-		<li><a href="#">Home</a></li>
-		<li><a href="#">Blog</a></li>
-		<li><a href="#">Projects</a></li>
-		<li><a href="#">About</a></li>
-	</ul>
-</div>
-		
+	<head>
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<title>{{ page.title }}</title>
 
-</head>
-<body>
+		<meta name="viewport" content="width=device-width,initial-scale=1">
+		<!--[if lte IE 8]><link rel="stylesheet" href="/contents/css/responsive-nav.css"><![endif]-->
+		<!--[if gt IE 8]><!--><link rel="stylesheet" href="/contents/css/styles-ie.css"><!--<![endif]-->
+		<script src="/contents/js/responsive-nav.js"></script>
 
-	{{ content }}
+	</head>
 
-<script>
-	var navigation = responsiveNav("#nav");
-</script>
-</body>
+	<body>
+
+		<div id="nav">
+			<ul>
+				<li><a href="Home">Home</a></li>
+				<li><a href="Blog">Blog</a></li>
+				<li><a href="Projects">Projects</a></li>
+				<li><a href="About">About</a></li>
+			</ul>
+		</div>
+
+		{{ content }}
+	
+		<script>
+			var navigation = responsiveNav("foo", {customToggle: ".nav-toggle"});
+		</script>
+	</body>
 </html>
