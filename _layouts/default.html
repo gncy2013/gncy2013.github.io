@@ -1,6 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
+
+<link rel="stylesheet" href="/contents/css/responsive-nav.css">
+<script src="/contents/js/responsive-nav.js"></script>
+
+<div id="nav">
+	<ul>
+		<li><a href="#">Home</a></li>
+		<li><a href="#">Blog</a></li>
+		<li><a href="#">Projects</a></li>
+		<li><a href="#">About</a></li>
+	</ul>
+</div>
 		
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<title>{{ page.title }}</title>
@@ -10,5 +22,8 @@
 
 	{{ content }}
 
+<script>
+	var navigation = responsiveNav("#nav");
+</script>
 </body>
 </html>
