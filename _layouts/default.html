@@ -13,8 +13,9 @@
 
 	<body>
 
-		<div id="nav">
+		<div role="navigation" id="foo" class="nav-collapse">
 			<ul>
+				<li class="active"><a href="Blog">Home</a></li>
 				<li><a href="Home">Home</a></li>
 				<li><a href="Blog">Blog</a></li>
 				<li><a href="Projects">Projects</a></li>
@@ -22,7 +23,12 @@
 			</ul>
 		</div>
 
+		<div role="main" class="main">
+			<a href="#nav" class="nav-toggle">Menu</a>
+
 		{{ content }}
+
+		</div>
 	
 		<script>
 			var navigation = responsiveNav("foo", {customToggle: ".nav-toggle"});
