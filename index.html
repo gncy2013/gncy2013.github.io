@@ -3,8 +3,24 @@ layout: default
 title: CBlog
 ---
 
-<ul>
-    {% for post in site.posts %}
-        <li> {{ post.date }} -> <a href="{{ post.url }}">{{ post.title }}</a> </li>
-    {% endfor %}
+{% for post in site.posts %}
+<ul id="post_list">
+    <span class="data" style="position: absolute; top: auto; bottom: auto;">
+        <span class="month">{{ post.data | data: "%b" }}</span>
+        <span class="day">{{ post.data | data: "%d" }}</span>
+    </span>
+    <li class="post-preview">
+        <div class="body">
+            <div class="content">
+                <h2 class="title"><a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a></h2>
+                {% if post.content contains "<!-- more -->" %}
+                    {{ post.content | split: "<!-- more -->" | first % }}
+                {% else %}
+                    {{ post.content | strip_html | truncatewords:100 }}
+                {% endif %}
+                <h2 class="read more"><a href="{{ post.url }}" title="{{ post.title }}">Read More...</a></h3>
+            </div>
+        </div>
+    </li>
 </ul>
+{% endfor %}
