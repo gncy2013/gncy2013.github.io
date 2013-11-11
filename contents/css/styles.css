@@ -156,3 +156,30 @@ body {
     background-size: 100px 100px;
   }
 }
+
+/*---------------------
+     SHOW THE DATE
+----------------------*/
+.date { 
+   color: #777;
+   background: url(http://x.libdd.com/farm1/dc389b/c6766d81/FB418.png) no-repeat; 
+   position: absolute;
+   z-index: 20;
+   margin: 10px 0 0 -9px; 
+   width: 52px;
+   height: 61px;
+}
+.date span { 
+   line-height: 1;
+   text-align: center; 
+   display: block;
+}
+.date .month { 
+   font-size: 9px;
+   text-transform: uppercase; 
+   padding: 10px 0 4px;
+}
+.date .day {
+   font-size: 24px;
+   font-weight: bold;
+}

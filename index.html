@@ -5,9 +5,9 @@ title: CBlog
 
 {% for post in site.posts %}
 <ul id="post_list">
-    <span class="data" style="position: absolute; top: auto; bottom: auto;">
-        <span class="month">{{ post.data | data: "%b" }}</span>
-        <span class="day">{{ post.data | data: "%d" }}</span>
+    <span class="date" style="position: absolute; top: auto; bottom: auto;">
+        <span class="month">{{ post.date | date: "%b" }}</span>
+        <span class="day">{{ post.date | date: "%d" }}</span>
     </span>
     <li class="post-preview">
         <div class="body">
