@@ -157,6 +157,17 @@ body {
   }
 }
 
+.main {
+    width: 640px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media only screen and (max-width:540px) {
+    .main {
+    width:  auto;
+    padding: 20px;
+}
 /*---------------------
      SHOW THE DATE
 ----------------------*/
