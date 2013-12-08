@@ -5,22 +5,18 @@ title: 成宇的Blog
 
 {% for post in site.posts %}
 <ul id="post_list">
-    <span class="date" style="position: absolute; top: auto; bottom: auto;">
-        <span class="month">{{ post.date | date: "%b" }}</span>
-        <span class="day">{{ post.date | date: "%d" }}</span>
-    </span>
     <li class="post-preview">
         <div class="body">
             <div class="content">
                 <h2 class="title"><a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a></h2>
                 {% if post.content contains "<!-- more -->" %}
-                    {{ post.content | split: "<!-- more -->" | first % }}
+                    <p>{{ post.content | split: "<!-- more -->" | first % }}</p>
                     <h3 class="read more"><a href="{{ post.url }}" title="{{ post.title }}">Read More...</a></h3>
                 {% else %}
                     {% if post.content contains "<!-- nomore -->" %}
-                        {{ post.content | strip_html }}
+                        <p>{{ post.content | strip_html }}</p>
                     {% else %}
-                        {{ post.content | strip_html | truncatewords:100 }}
+                        <p>{{ post.content | strip_html | truncatewords:100 }}</p>
                         <h3 class="read more"><a href="{{ post.url }}" title="{{ post.title }}">Read More...</a></h3>
                     {% endif %}
                 {% endif %}
@@ -29,3 +25,5 @@ title: 成宇的Blog
     </li>
 </ul>
 {% endfor %}
+
+<h3><a class="pull-right" href="/archive.html">所有日志...</a></h3>

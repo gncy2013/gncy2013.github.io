@@ -1,56 +1,40 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-        <title>{{ page.title }}</title>
-        <meta name="viewport" content="width=device-width,initial-scale=1">
+---
+layout: default
+---
+<h1>{{ page.title }}</h1>
+{{ page.date | date: "%Y年%m月%d日" }}
+{% for tag in page.tags%} <a href="/tags.html#{{ tag }}">{{ tag }}</a>{% endfor %}
 
-        <link rel="stylesheet" href="/contents/css/styles.css">
-        <link rel="stylesheet" href="/contents/css/comment.css">
+<hr>
+    {{ content }}
+<hr>
 
-        <!--[if lte IE 8]>script src="/contents/js/respond.js"></script><![endif]-->
-        <script src="/contents/js/responsive-nav.js"></script>
-    </head>
+<ul class="pager">
+    <li class="previos">
+        {% if page.next %}<a href="{{ page.next.url }}">&larr;较新一篇：{{ page.next.title }}</a>
+        {% else %}<a class="disabled" href="#">&larr;较新一篇：没有了</a>
+        {% endif %}
+    </li>
+    <li class="next">
+        {% if page.previous %}<a href="{{ page.previous.url }}">较旧一篇：{{ page.previous.title }}&rarr;</a>
+        {% else %}<a class="disabled" href="#">较旧一篇：没有了&rarr;</a>
+        {% endif %}
+    </li>
+</ul>
 
-    <body>
-
-        <div role="navigation" id="foo" class="nav-collapse">
-            <ul>
-                <li><a href="/../Home">Home</a></li>
-                <li class="active"><a href="/../">Blog</a></li>
-                <li><a href="/../Projects">Projects</a></li>
-                <li><a href="/../About">About</a></li>
-            </ul>
+<div class="comment"> 
+    <div class="comm" id="comm">loading...</div>
+    <form action="javascript:void(0);" id="comminput" name="comminput">
+        <div class="userinfo">
+            <label for="author">Name<font color="red">*</font></label><br>
+            <input type="text" name="author" id="author" placeholder="yourname" required="true"/><br>
+            <label for="link">Website<font color="red">*</font></label><br>
+            <input type="text" name="link" id="link" placeholder="example.com" required="true"/><br>
+            <label for="email">Email<font color="red">*</font></label><br>
+            <input type="text" name="email" id="email" placeholder="oo@xx.com" required="true"/><br>
         </div>
-
-        <div role="main" class="main">
-            <a href="#nav" class="nav-toggle">Menu</a>
-
-        {{ content }}
-    
-            <div class="comment"> 
-                <div class="comm" id="comm">loading...</div>
-                <form action="javascript:void(0);" id="comminput" name="comminput">
-                    <div class="userinfo">
-                        <label for="author">Name<font color="red">*</font></label><br>
-                        <input type="text" name="author" id="author" placeholder="yourname" required="true"/><br>
-                        <label for="link">Website<font color="red">*</font></label><br>
-                        <input type="text" name="link" id="link" placeholder="example.com" required="true"/><br>
-                        <label for="email">Email<font color="red">*</font></label><br>
-                        <input type="text" name="email" id="email" placeholder="oo@xx.com" required="true"/><br>
-                    </div>
-                    <label for="commcon">Comment</label><br>
-                    <textarea name="commcon" id="commcon" placeholder="在这里吐槽吧~" required="true"></textarea><br>
-                    <input type="submit" id="pushcomm" class="pushcomm" value="提交评论"/><br>
-                </form>
-            </div>
-
-        </div>
-    
-        <script>
-            var navigation = responsiveNav("foo", {customToggle: ".nav-toggle"});
-        </script>
-        <script src="/contents/js/lib.js"></script>
-        <script src="/contents/js/comment.js"></script>
-    </body>
-</html>
+        <label for="commcon">Comment</label><br>
+        <textarea name="commcon" id="commcon" placeholder="在这里吐槽吧~" required="true"></textarea><br>
+        <input type="submit" id="pushcomm" class="pushcomm" value="提交评论"/><br>
+    </form>
+</div>
