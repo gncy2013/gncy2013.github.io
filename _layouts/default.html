@@ -1,34 +1,53 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta http-equiv="content-language" content="zh-cn">
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-        <title>{{ page.title }}</title>
         <meta name="viewport" content="width=device-width,initial-scale=1">
-        <link rel="stylesheet" href="/contents/css/styles.css">
-        <!--[if lte IE 8]>script src="/contents/js/respond.js"></script><![endif]-->
-        <script src="/contents/js/responsive-nav.js"></script>
+        <title>{{ page.title }}</title>
+        <link rel="stylesheet" type="text/css" href="/contents/css/style.css">
+        <link rel="stylesheet" type="text/css" href="/contents/css/comment.css">
     </head>
 
     <body>
+        <a href="#top" id="toTop"></a>
 
-        <div role="navigation" id="foo" class="nav-collapse">
-            <ul>
-                <li><a href="Home">Home</a></li>
-                <li class="active"><a href="/../">Blog</a></li>
-                <li><a href="Projects">Projects</a></li>
-                <li><a href="About">About</a></li>
-            </ul>
+        <header class="head">
+            <div class="inhead">
+                <div class="Mobile" style="float: right; font-size: 24px">
+                    <a href="/">Blog</a>
+                    <a href="/archive.html">Archive</a>
+                    <a href="/tags.html">Tags</a>
+                    <a href="/about.html">About</a>
+                </div>
+                <div class="Desktop">
+                    <img class="logo" src="/contents/img/logo.png">
+                    <a href="/">MyBlog</a>
+                    <hr>
+                    <ul>
+                        <li {% if page.title == "成宇的Blog" %}class="active"{% endif %}><a href="/">Blog</a></li>
+                        <li {% if page.title == "Archive" %}class="active"{% endif %}><a href="/archive.html">Archive</a></li>
+                        <li {% if page.title == "Tags" %}class="active"{% endif %}><a href="/tags.html">Tags</a></li>
+                        <li {% if page.title == "About" %}class="active"{% endif %}><a href="/about.html">About</a></li>
+                    </ul>
+                    <hr>
+                    <a href="http://www.google.com/ncr" title="Google来当个占位符...">这是Google...</a>
+                    <a href="https://github.com/gncy2013" title="我的GitHub页面">GitHub</a>
+                    <hr>
+                    <ul>
+                        <li>Copyright &copy; <a href="/about.html">成宇</a></li>
+                        <li>Powered By <a href="https://github.com/gncy2013/gncy2013.github.io">GitHub Pages</a></li>
+                    </ul>
+                </div>
+            </div>
+        </header>
+
+        <div class="contents">
+            {{ content }}
         </div>
 
-        <div role="main" class="main">
-            <a href="#nav" class="nav-toggle">Menu</a>
-
-        {{ content }}
-
-        </div>
-    
-        <script>
-            var navigation = responsiveNav("foo", {customToggle: ".nav-toggle"});
-        </script>
+        <script type="text/javascript" src="/contents/js/comment.js"></script>
+        <script type="text/javascript" src="/contents/js/lib.js"></script>
+        <script type="text/javascript" src="http://api.hitokoto.us/rand?encode=js&charset=utf-8"></script>
     </body>
 </html>

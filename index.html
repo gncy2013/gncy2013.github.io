@@ -1,6 +1,6 @@
 ---
 layout: default
-title: CBlog
+title: 成宇的Blog
 ---
 
 {% for post in site.posts %}
@@ -15,10 +15,15 @@ title: CBlog
                 <h2 class="title"><a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a></h2>
                 {% if post.content contains "<!-- more -->" %}
                     {{ post.content | split: "<!-- more -->" | first % }}
+                    <h3 class="read more"><a href="{{ post.url }}" title="{{ post.title }}">Read More...</a></h3>
                 {% else %}
-                    {{ post.content | strip_html | truncatewords:100 }}
+                    {% if post.content contains "<!-- nomore -->" %}
+                        {{ post.content | strip_html }}
+                    {% else %}
+                        {{ post.content | strip_html | truncatewords:100 }}
+                        <h3 class="read more"><a href="{{ post.url }}" title="{{ post.title }}">Read More...</a></h3>
+                    {% endif %}
                 {% endif %}
-                <h2 class="read more"><a href="{{ post.url }}" title="{{ post.title }}">Read More...</a></h3>
             </div>
         </div>
     </li>

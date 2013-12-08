@@ -4,7 +4,10 @@
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
         <title>{{ page.title }}</title>
         <meta name="viewport" content="width=device-width,initial-scale=1">
+
         <link rel="stylesheet" href="/contents/css/styles.css">
+        <link rel="stylesheet" href="/contents/css/comment.css">
+
         <!--[if lte IE 8]>script src="/contents/js/respond.js"></script><![endif]-->
         <script src="/contents/js/responsive-nav.js"></script>
     </head>
@@ -24,26 +27,30 @@
             <a href="#nav" class="nav-toggle">Menu</a>
 
         {{ content }}
-
-        <div id="disqus_thread"></div>
-        <script type="text/javascript">
-            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-            var disqus_shortname = 'cygithub'; // required: replace example with your forum shortname
-
-            /* * * DON'T EDIT BELOW THIS LINE * * */
-            (function() {
-                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-            })();
-        </script>
-        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
     
+            <div class="comment"> 
+                <div class="comm" id="comm">loading...</div>
+                <form action="javascript:void(0);" id="comminput" name="comminput">
+                    <div class="userinfo">
+                        <label for="author">Name<font color="red">*</font></label><br>
+                        <input type="text" name="author" id="author" placeholder="yourname" required="true"/><br>
+                        <label for="link">Website<font color="red">*</font></label><br>
+                        <input type="text" name="link" id="link" placeholder="example.com" required="true"/><br>
+                        <label for="email">Email<font color="red">*</font></label><br>
+                        <input type="text" name="email" id="email" placeholder="oo@xx.com" required="true"/><br>
+                    </div>
+                    <label for="commcon">Comment</label><br>
+                    <textarea name="commcon" id="commcon" placeholder="在这里吐槽吧~" required="true"></textarea><br>
+                    <input type="submit" id="pushcomm" class="pushcomm" value="提交评论"/><br>
+                </form>
+            </div>
+
         </div>
     
         <script>
             var navigation = responsiveNav("foo", {customToggle: ".nav-toggle"});
         </script>
+        <script src="/contents/js/lib.js"></script>
+        <script src="/contents/js/comment.js"></script>
     </body>
 </html>
