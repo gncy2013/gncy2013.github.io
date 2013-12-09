@@ -658,7 +658,7 @@ a:hover {
 /* Scaffolding
 -------------------------------------------------- */
 
-.container {
+.contents {
   margin: 10px 6px;
 }
 
@@ -718,8 +718,8 @@ a:hover {
     font-size: 64px;
   }
 
-  /* Center container in available real estate */
-  .container {
+  /* Center contents in available real estate */
+  .contents {
     margin-left: 30%;
     margin-right: 5%;
     width: 65%;
