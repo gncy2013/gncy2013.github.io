@@ -7,6 +7,7 @@
         <title>{{ page.title }}</title>
         <link rel="stylesheet" type="text/css" href="/contents/css/style.css">
         <link rel="stylesheet" type="text/css" href="/contents/css/comment.css">
+        <script type="text/javascript" src="http://api.hitokoto.us/rand?encode=js&charset=utf-8"></script>
     </head>
 
     <body>
@@ -19,10 +20,12 @@
                     <a href="/archive.html">Archive</a>
                     <a href="/tags.html">Tags</a>
                     <a href="/about.html">About</a>
+                    <h4><div id="hitokoto">『<script>hitokoto()</script>』</div></h4>
                 </div>
                 <div class="Desktop">
-                    <img class="logo" src="/contents/img/logo.png">
+                    <img class="logo" src="/contents/img/logo.png"><br/>
                     <a href="/">MyBlog</a>
+                    <h4><div id="hitokoto">『<script>hitokoto()</script>』</div></h4>
                     <hr>
                     <ul>
                         <li {% if page.title == "成宇的Blog" %}class="active"{% endif %}><a href="/">Blog</a></li>
@@ -49,6 +52,6 @@
         <script type="text/javascript" src="/contents/js/comment.js"></script>
         <script type="text/javascript" src="/contents/js/lib.js"></script>
         <script type="text/javascript" src="/contents/js/totop.js"></script>
-        <script type="text/javascript" src="http://api.hitokoto.us/rand?encode=js&charset=utf-8"></script>
+        
     </body>
 </html>

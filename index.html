@@ -3,7 +3,7 @@ layout: default
 title: 成宇的Blog
 ---
 
-{% for post in site.posts %}
+{% for post in site.posts limit: 5 %}
 <ul id="post_list">
     <li class="post-preview">
         <div class="body">
@@ -11,13 +11,13 @@ title: 成宇的Blog
                 <h2 class="title"><a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a></h2>
                 {% if post.content contains "<!-- more -->" %}
                     <p>{{ post.content | split: "<!-- more -->" | first % }}</p>
-                    <h3 class="read more"><a href="{{ post.url }}" title="{{ post.title }}">Read More...</a></h3>
+                    <h5 class="read more"><a href="{{ post.url }}" title="{{ post.title }}">Read More...</a></h5>
                 {% else %}
                     {% if post.content contains "<!-- nomore -->" %}
                         <p>{{ post.content | strip_html }}</p>
                     {% else %}
                         <p>{{ post.content | strip_html | truncatewords:100 }}</p>
-                        <h3 class="read more"><a href="{{ post.url }}" title="{{ post.title }}">Read More...</a></h3>
+                        <h5 class="read more"><a href="{{ post.url }}" title="{{ post.title }}">Read More...</a></h5>
                     {% endif %}
                 {% endif %}
             </div>

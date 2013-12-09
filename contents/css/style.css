@@ -491,7 +491,7 @@ table {
   right: 20px;
   width: 48px;
   height: 48px;
-  background-image: url('up.png');
+  background-image: url('/contents/img/totop.png');
   background-repeat: no-repeat;
   opacity: 0.5;
   z-index: 999;
@@ -659,11 +659,15 @@ a:hover {
 -------------------------------------------------- */
 
 .contents {
-  margin: 10px 6px;
+  margin-top: 90px;
+  margin-right: 6px;
+  margin-bottom: 10px;
+  margin-left: 6px;
 }
 
 /* Header */
 .head {
+  text-align:right;
   color: #fff;
   background-color: #2a2a2a;
   z-index: 9999;
@@ -671,7 +675,7 @@ a:hover {
   top: 0;
   left: 0;
   width: 100%;
-  height: 40px;
+  height: 80px;
 }
 .inhead {
   padding: 0px;
@@ -689,8 +693,7 @@ a:hover {
   color: #fff;
 }
 .head .logo {
-  border-radius: 8px;
-  background-color: white;
+  float: right;
 }
 
 .Mobile {
