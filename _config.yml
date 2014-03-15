@@ -1,1 +1,6 @@
 baseurl: gncy2013.github.io
+gems:
+  - jemoji
+safe: true
+lsi: false
+pygments: true

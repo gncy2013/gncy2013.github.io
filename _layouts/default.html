@@ -5,6 +5,12 @@
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <title>{{ page.title }}</title>
+        <link rel="apple-touch-icon" href="/contents/img/favicon/touch.png">
+        <link rel="icon" href="/contents/img/favicon/32.png">
+        <!--[if IE]><link rel="shortcut icon" href="/contents/img/favicon/16.ico"><![endif]-->
+        <!-- or, set /favicon.ico for IE10 win -->
+        <meta name="msapplication-TileColor" content="#5B7C7C">
+        <meta name="msapplication-TileImage" content="/contents/img/favicon/144.png">
         <link rel="stylesheet" type="text/css" href="/contents/css/style.css">
         <link rel="stylesheet" type="text/css" href="/contents/css/comment.css">
         <script type="text/javascript" src="http://api.hitokoto.us/rand?encode=js&charset=utf-8"></script>
@@ -20,27 +26,30 @@
                     <a href="/archive.html">Archive</a>
                     <a href="/tags.html">Tags</a>
                     <a href="/about.html">About</a>
-                    <h4><div id="hitokoto">『<script>hitokoto()</script>』</div></h4>
+                    <p id="hitokoto">『<script>hitokoto()</script>』</p>
                 </div>
+
                 <div class="Desktop">
                     <img class="logo" src="/contents/img/logo.png"><br/>
-                    <a href="/">MyBlog</a>
-                    <h4><div id="hitokoto">『<script>hitokoto()</script>』</div></h4>
-                    <hr>
-                    <ul>
+                    <div id="hitokoto">『<script>hitokoto()</script>』</div>
+
+                    <nav id="main-nav">
                         <li {% if page.title == "成宇的Blog" %}class="active"{% endif %}><a href="/">Blog</a></li>
                         <li {% if page.title == "Archive" %}class="active"{% endif %}><a href="/archive.html">Archive</a></li>
                         <li {% if page.title == "Tags" %}class="active"{% endif %}><a href="/tags.html">Tags</a></li>
                         <li {% if page.title == "About" %}class="active"{% endif %}><a href="/about.html">About</a></li>
-                    </ul>
-                    <hr>
-                    <a href="http://www.google.com/ncr" title="Google来当个占位符...">这是Google...</a>
-                    <a href="https://github.com/gncy2013" title="我的GitHub页面">GitHub</a>
-                    <hr>
-                    <ul>
+                    </nav>
+
+                    <div class="social">
+                        <a class="google" href="https://plus.google.com/100901309333040035610" rel="author" title="Google+">Google+</a>
+                        <a class="github" href="https://github.com/gncy2013" title="GitHub">GitHub</a>
+                        <a class="weibo" href="http://weibo.com/JBBoom" title="Weibo">Weibo</a>
+                    </div>
+                    
+                    <div class="copyright">
                         <li>Copyright &copy; <a href="/about.html">成宇</a></li>
                         <li>Powered By <a href="https://github.com/gncy2013/gncy2013.github.io">GitHub Pages</a></li>
-                    </ul>
+                    </div>
                 </div>
             </div>
         </header>
@@ -52,6 +61,5 @@
         <script type="text/javascript" src="/contents/js/comment.js"></script>
         <script type="text/javascript" src="/contents/js/lib.js"></script>
         <script type="text/javascript" src="/contents/js/totop.js"></script>
-        
     </body>
 </html>

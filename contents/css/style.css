@@ -513,7 +513,7 @@ table {
 
 body {
   margin-top: 45px;
-  font-family: "Microsoft YaHei", "Open Sans", Helvetica, Arial, sans-serif;
+  font-family: "Open Sans", "HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue",Helvetica,Arial,sans-serif;
   font-size: 16px;
   line-height: 1.5;
   color: #454441;
@@ -529,12 +529,8 @@ h1, h2, h3, h4, h5, h6 {
 h1 {
   font-size: 40px;
 }
-h2 {
+h2, h3 {
   margin-top: 20px;
-  font-size: 32px;
-}
-h3 {
-  margin-top: 24px;
   font-size: 24px;
 }
 h4, h5, h6 {
@@ -635,18 +631,11 @@ blockquote p:after {
   content: '\201D';
 }
 
-img {
-  display: block;
-  margin: 0 0 15px;
-  border-radius: 5px;
-}
-
-
 /* Links
 -------------------------------------------------- */
 
 a {
-  font-weight: 600;
+  font-weight: 400;
   color: #222;
   text-decoration: none;
 }
@@ -667,7 +656,6 @@ a:hover {
 
 /* Header */
 .head {
-  text-align:right;
   color: #fff;
   background-color: #2a2a2a;
   z-index: 9999;
@@ -692,12 +680,10 @@ a:hover {
 .head a {
   color: #fff;
 }
-.head .logo {
-  float: right;
-}
 
 .Mobile {
   display: block;
+  text-align: right;
 }
 
 .Desktop {
@@ -715,7 +701,7 @@ a:hover {
 
   body {
     margin-top: 0px;
-    font-size: 18px;
+    font-size: 16px;
   }
   .head h1 {
     font-size: 64px;
@@ -769,7 +755,148 @@ a:hover {
   .Desktop {
     display: block;
   }
+
+  #main-nav {
+    margin: 20px 0px 20px 0px;
+    text-align: right;
+    font-size: 18px;
+  }
 }
 
 /*! END OF - custom style */
 /*! ==============================================================================================================*/
+
+/*! Social */
+.social {
+  direction: rtl;
+}
+.social a {
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%;
+    border-radius: 50%;
+    display: -moz-inline-stack;
+    display: inline-block;
+    vertical-align: middle;
+    *vertical-align: auto;
+    zoom: 1;
+    *display: inline;
+    text-indent: -9999px;
+    margin: 0 15px 15px 0;
+    opacity: 0.5;
+    width: 28px;
+    height: 28px;
+    -webkit-transition: 0.3s;
+    -moz-transition: 0.3s;
+    -o-transition: 0.3s;
+    transition: 0.3s
+}
+
+.social a:hover {
+    opacity: 1
+}
+
+.social a.weibo {
+    background: url('/contents/img/social/weibo.png') center no-repeat #d52b2a;
+    border: 1px solid #d52b2a
+}
+
+.social a.weibo:hover {
+    border: 1px solid #a22
+}
+
+.social a.facebook {
+    background: url('/contents/img/social/facebook.png') center no-repeat #3b5998;
+    border: 1px solid #3B5998
+}
+
+.social a.facebook:hover {
+    border: 1px solid #2d4373
+}
+
+.social a.google {
+    background: url('/contents/img/social/google.png') center no-repeat #c83d20;
+    border: 1px solid #C83D20
+}
+
+.social a.google:hover {
+    border: 1px solid #9c3019
+}
+
+.social a.twitter {
+    background: url('/contents/img/social/twitter.png') center no-repeat #55cff8;
+    border: 1px solid #55CFF8
+}
+
+.social a.twitter:hover {
+    border: 1px solid #24c1f6
+}
+
+.social a.github {
+    background: url('/contents/img/social/github.png') center no-repeat #afb6ca;
+    border: 1px solid #afb6ca
+}
+
+.social a.github:hover {
+    border: 1px solid #909ab6
+}
+
+.social a.coderwall {
+    background: url('/contents/img/social/coderwall.png') center no-repeat #3e8dcc;
+    border: 1px solid #3E8DCC
+}
+
+.social a.coderwall:hover {
+    border: 1px solid #2d73aa
+}
+
+.social a.stackoverflow {
+    background: url('/contents/img/social/stackoverflow.png') center no-repeat #ef7522;
+    border: 1px solid #EF7522
+}
+
+.social a.stackoverflow:hover {
+    border: 1px solid #CC7A00
+}
+
+.social a.linkedin {
+    background: url('/contents/img/social/linkedin.png') center no-repeat #005a87;
+    border: 1px solid #005A87
+}
+
+.social a.pinterest {
+    background: url('/contents/img/social/pinterest.png') center no-repeat #be4037;
+    border: 1px solid #be4037
+}
+
+.social a.pinterest:hover {
+    border: 1px solid #96332c
+}
+
+.social a.delicious {
+    background: url('/contents/img/social/delicious.png') center no-repeat #3271cb;
+    border: 1px solid #3271cb
+}
+
+.social a.delicious:hover {
+    border: 1px solid #285aa2
+}
+
+.social a.pinboard {
+    background: url('/contents/img/social/pinboard.png') center no-repeat #0066c8;
+    border: 1px solid #3a729f
+}
+
+.social a.pinboard:hover {
+    border: 1px solid #0052cc
+}
+
+.social a.rss {
+    background: url('/contents/img/social/rss.png') center no-repeat #ef7522;
+    border: 1px solid #EF7522
+}
+
+.social a.rss:hover {
+    border: 1px solid #cf5d0f
+}
