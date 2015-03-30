@@ -17,7 +17,7 @@ tags:
 先直接打开程序, 随便输几个号码, 点击 Register 之后出现 failed 的消息窗口.  
 接下来就可以打开 OD 加载它, 代码窗口右键搜索名称, 输入 `MessageBox` 就会跳转到消息框的函数在代码中的位置, 按 `F2` 设断点.  
 运行程序, 输入任意内容, 点击 Register, 到达断点, 代码如下  
-```asm
+```nasm
 CPU Disasm
 Address   Hex dump          Command                                  Comments
 76FFFD1E  /$  8BFF          MOV EDI,EDI                              ; ID_X USER32.MessageBoxA(hOwner,Text,Caption,Type)
@@ -33,7 +33,7 @@ Address   Hex dump          Command                                  Comments
 76FFFD37  \.  C2 1000       RETN 10
 ```
 这时按 `F8` 单步执行, 停到 `76FFFD36`, 点击确定按钮后跳到如下代码的 `004010A1` 处  
-```asm
+```nasm
 CPU Disasm
 Address   Hex dump          Command                                  Comments
 00401050  /$  817C24 08 110 CMP DWORD PTR SS:[ARG.2],111             ; HEX ncrackme.00401050(guessed hWnd,Msg,wParam,lParam)
