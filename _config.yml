@@ -4,3 +4,6 @@ gems:
 safe: true
 lsi: false
 pygments: true
+markdown: kramdown
+kramdown:
+  input: GFM
