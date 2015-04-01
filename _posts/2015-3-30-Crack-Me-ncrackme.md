@@ -76,4 +76,243 @@ Address   Hex dump          Command                                  Comments
 上面的代码里有三个 `MessageBox`, `00401072  |.  75 1B         JNZ SHORT 0040108F` 这一行就是判断点击 Register 后是弹出哪个消息的代码.  
 往上看, `JNZ` 使用的结果来自于 `00401069  |.  85C0          TEST EAX,EAX`. `EAX` 不是 0 则跳到 fail, 如果是 0 则跳到 successful.  
 于是可以简单地把 `JNZ` 改成 `JZ`, 则 key 错误时也会直接弹出 successful 的消息窗口.  
-未完待续...
+然而简单的爆破并没有什么卵用, 所以要找到验证密钥的算法, 上面的 `TEST EAX,EAX` 用了 `CALL 00401230` 的返回值, 于是右键选择 Go to 选择 expression 跳到这里. 就是下面这一大坨代码.  
+```asm
+CPU Disasm
+Address   Hex dump          Command                                  Comments
+00401230  /$  8B0D BC564000 MOV ECX,DWORD PTR DS:[4056BC]
+00401236  |.  83EC 30       SUB ESP,30
+00401239  |.  8D4424 00     LEA EAX,[LOCAL.11]
+0040123D  |.  53            PUSH EBX
+0040123E  |.  56            PUSH ESI
+0040123F  |.  8B35 94404000 MOV ESI,DWORD PTR DS:[<&USER32.GetDlgIte
+00401245  |.  6A 10         PUSH 10                                  ; /MaxCount = 16.
+00401247  |.  50            PUSH EAX                                 ; |String => OFFSET LOCAL.11
+00401248  |.  68 E8030000   PUSH 3E8                                 ; |ItemID = 1000.
+0040124D  |.  51            PUSH ECX                                 ; |hDialog => [4056BC] = 001304BC, class = #32770
+0040124E  |.  33DB          XOR EBX,EBX                              ; |
+00401250  |.  FFD6          CALL ESI                                 ; \USER32.GetDlgItemTextA
+00401252  |.  83F8 03       CMP EAX,3
+00401255  |.  73 0B         JAE SHORT 00401262                       ; 这里 如果 EAX 长度不小于 3 则跳转, 否则 RETN, EAX 是 Reg name
+00401257  |.  5E            POP ESI
+00401258  |.  B8 01000000   MOV EAX,1
+0040125D  |.  5B            POP EBX
+0040125E  |.  83C4 30       ADD ESP,30
+00401261  |.  C3            RETN
+00401262  |>  A1 BC564000   MOV EAX,DWORD PTR DS:[4056BC]
+00401267  |.  8D5424 28     LEA EDX,[LOCAL.3]
+0040126B  |.  6A 10         PUSH 10
+0040126D  |.  52            PUSH EDX
+0040126E  |.  68 E9030000   PUSH 3E9
+00401273  |.  50            PUSH EAX
+00401274  |.  FFD6          CALL ESI
+00401276  |.  0FBE4424 08   MOVSX EAX,BYTE PTR SS:[ARG.2]            ; name 第一位放入 EAX
+0040127B  |.  0FBE4C24 09   MOVSX ECX,BYTE PTR SS:[ARG.2+1]          ; name 第二位放入 ECX
+00401280  |.  99            CDQ                                      ; EAX 扩展为 64 位 QWORD 
+00401281  |.  F7F9          IDIV ECX                                 ; 把 EDX:EAX 除以 ECX，余数放在 EDX (EDX:EAX) = (EDX:EAX) / ECX 
+00401283  |.  8BCA          MOV ECX,EDX                              ; 余数存到 ECX
+00401285  |.  83C8 FF       OR EAX,FFFFFFFF                          ; EAX 全置 1
+00401288  |.  0FBE5424 0A   MOVSX EDX,BYTE PTR SS:[ARG.2+2]          ; name 第三位放入 EDX
+0040128D  |.  0FAFCA        IMUL ECX,EDX                             ; ECX = ECX * EDX
+00401290  |.  41            INC ECX                                  ; ECX = ECX + 1
+00401291  |.  33D2          XOR EDX,EDX                              ; EDX = 0
+00401293  |.  F7F1          DIV ECX                                  ; (EDX:EAX) = (EDX:EAX) / ECX 
+00401295  |.  50            PUSH EAX                                 ; /Arg1
+00401296  |.  E8 A5000000   CALL 00401340                            ; \ncrackme.00401340 保存 EAX 到4050AC
+
+Address   Hex dump          Command                                  Comments
+00401340  /$  8B4424 04     MOV EAX,DWORD PTR SS:[ARG.1]             ; ncrackme.00401340(guessed Arg1)
+00401344  |.  A3 AC504000   MOV DWORD PTR DS:[4050AC],EAX
+00401349  \.  C3            RETN
+0040134A  /$  A1 AC504000   MOV EAX,DWORD PTR DS:[4050AC]            ; ncrackme.0040134A(guessed void)
+0040134F  |.  69C0 FD430300 IMUL EAX,EAX,343FD                       ; EAX = EAX * 343FD 
+00401355  |.  05 C39E2600   ADD EAX,269EC3                           ; EAX = EAX + 269EC3
+0040135A  |.  A3 AC504000   MOV DWORD PTR DS:[4050AC],EAX            ; 保存 EAX 到4050AC
+0040135F  |.  C1F8 10       SAR EAX,10                               ; 向右移 10 位
+00401362  |.  25 FF7F0000   AND EAX,00007FFF                         ; 与 7FFF
+00401367  \.  C3            RETN
+```
+上面这一堆运算用正常人看着舒服点的样子写就是下面这样  
+```c
+ECX = name[0] % name[1]  
+ECX = name[2] * (name[0] % name[1])  
+ECX = (name[2] * (name[0] % name[1]) + 1)  
+EAX = 0xFFFFFFFF / (name[2] * (name[0] % name[1]) + 1)  
+EAX = (0xFFFFFFFF / (name[2] * (name[0] % name[1]) + 1)) * 0x343FD  
+EAX = (0xFFFFFFFF / (name[2] * (name[0] % name[1]) + 1)) * 0x343FD + 0x269EC3 保存到 4050AC  
+EAX = ((0xFFFFFFFF / (name[2] * (name[0] % name[1]) + 1)) * 0x343FD + 0x269EC3) >> 0x10  
+EAX = (((0xFFFFFFFF / (name[2] * (name[0] % name[1]) + 1)) * 0x343FD + 0x269EC3) >> 0x10) AND 0x7FFF  
+```
+
+
+
+```asm
+004012A0  |>  E8 A5000000   /CALL 0040134A                           ; [ncrackme.0040134A
+004012A5  |.  99            |CDQ
+004012A6  |.  B9 1A000000   |MOV ECX,1A
+004012AB  |.  F7F9          |IDIV ECX
+004012AD  |.  80C2 41       |ADD DL,41                               ; 加41
+004012B0  |.  885434 18     |MOV BYTE PTR SS:[ESI+ESP+18],DL
+004012B4  |.  46            |INC ESI
+004012B5  |.  83FE 0F       |CMP ESI,0F                              ; 0 到 15 循环
+004012B8  |.^ 72 E6         \JB SHORT 004012A0
+004012BA  |.  57            PUSH EDI
+004012BB  |.  8D7C24 0C     LEA EDI,[ARG.3]
+004012BF  |.  83C9 FF       OR ECX,FFFFFFFF
+004012C2  |.  33C0          XOR EAX,EAX
+004012C4  |.  33F6          XOR ESI,ESI
+004012C6  |.  F2:AE         REPNE SCAS BYTE PTR ES:[EDI]
+004012C8  |.  F7D1          NOT ECX
+004012CA  |.  49            DEC ECX
+004012CB  |.  74 59         JZ SHORT 00401326
+004012CD  |>  8A4434 0C     /MOV AL,BYTE PTR SS:[ESI+ESP+0C]
+004012D1  |.  C0F8 05       |SAR AL,5
+004012D4  |.  0FBEC0        |MOVSX EAX,AL
+004012D7  |.  8D1480        |LEA EDX,[EAX*4+EAX]
+004012DA  |.  8D04D0        |LEA EAX,[EDX*8+EAX]
+004012DD  |.  8D0440        |LEA EAX,[EAX*2+EAX]
+004012E0  |.  85C0          |TEST EAX,EAX
+004012E2  |.  7E 0A         |JLE SHORT 004012EE
+004012E4  |.  8BF8          |MOV EDI,EAX
+004012E6  |>  E8 5F000000   |/CALL 0040134A                          ; [ncrackme.0040134A
+004012EB  |.  4F            ||DEC EDI
+004012EC  |.^ 75 F8         |\JNZ SHORT 004012E6
+004012EE  |>  E8 57000000   |CALL 0040134A                           ; [ncrackme.0040134A
+004012F3  |.  99            |CDQ
+004012F4  |.  B9 1A000000   |MOV ECX,1A
+004012F9  |.  8D7C24 0C     |LEA EDI,[ARG.3]
+004012FD  |.  F7F9          |IDIV ECX
+004012FF  |.  0FBE4C34 2C   |MOVSX ECX,BYTE PTR SS:[ESI+ESP+2C]
+00401304  |.  80C2 41       |ADD DL,41
+00401307  |.  0FBEC2        |MOVSX EAX,DL
+0040130A  |.  2BC1          |SUB EAX,ECX
+0040130C  |.  885434 1C     |MOV BYTE PTR SS:[ESI+ESP+1C],DL
+00401310  |.  99            |CDQ                                     ; Calculates abs(EAX)
+00401311  |.  33C2          |XOR EAX,EDX
+00401313  |.  83C9 FF       |OR ECX,FFFFFFFF
+00401316  |.  2BC2          |SUB EAX,EDX
+00401318  |.  03D8          |ADD EBX,EAX
+0040131A  |.  33C0          |XOR EAX,EAX
+0040131C  |.  46            |INC ESI
+0040131D  |.  F2:AE         |REPNE SCAS BYTE PTR ES:[EDI]
+0040131F  |.  F7D1          |NOT ECX
+00401321  |.  49            |DEC ECX
+00401322  |.  3BF1          |CMP ESI,ECX
+00401324  |.^ 72 A7         \JB SHORT 004012CD
+00401326  |>  5F            POP EDI
+00401327  |.  8BC3          MOV EAX,EBX
+00401329  |.  5E            POP ESI
+0040132A  |.  5B            POP EBX
+0040132B  |.  83C4 30       ADD ESP,30
+0040132E  \.  C3            RETN
+```
+
+还有简单的方法, 打开 IDA Pro, 按 F5, 然后就有 C 语言代码了.  
+```c
+if ( GetDlgItemTextA(dword_4056BC, 1000, &String, 16) >= 3 )
+  {
+    GetDlgItemTextA(dword_4056BC, 1001, v12, 16);
+    sub_401340(0xFFFFFFFFu / (v10 * String % v9 + 1));
+    v2 = 0;
+    do
+      v11[v2++] = rand() % 26 + 65;
+    while ( v2 < 0xF );
+    v3 = 0;
+    if ( strlen(&String) != 0 )
+    {
+      do
+      {
+        if ( 123 * (char)(*(&String + v3) >> 5) > 0 )
+        {
+          v4 = 123 * (char)(*(&String + v3) >> 5);
+          do
+          {
+            rand();
+            --v4;
+          }
+          while ( v4 );
+        }
+        v5 = rand();
+        v6 = v12[v3];
+        v11[v3] = v5 % 26 + 65;
+        v7 = (signed int)(char)(v5 % 26 + 65) - v6;
+        v0 += (HIDWORD(v7) ^ v7) - HIDWORD(v7);
+        ++v3;
+      }
+      while ( v3 < strlen(&String) );
+    }
+    result = v0;
+  }
+  else
+  {
+    result = 1;
+  }
+  return result;
+```
+
+keygen  
+```c
+#include<stdio.h>
+main()
+{
+ int i,j,k,len;
+ char name[20],psw[20],key[20];
+ 
+ long ax,cx,sum,dx,loc;
+ 
+ printf("name:");
+ scanf("%s",name);
+ 
+ sum=0;
+ ax=name[0];
+ cx=name[1];
+ cx=ax%cx;
+ loc=0x002266f0;
+ ax|=0xffffffff;
+ cx=cx*name[2]+1;
+ 
+ for(i=0;i<0x0f;i++)
+ {
+  ax=loc;
+  ax=ax*0x343FD;
+  ax+=0x269EC3;
+  loc=ax;
+  ax>>=0x10;
+  ax&=0x7fff;
+  key[i]=ax%0x1a+0x41;
+ }
+ 
+ len=strlen(name);
+ 
+ for(i=0;i<len;i++)
+ {
+  ax=name[i];
+  ax>>=5;
+  ax&=0x0ff;
+  dx=ax*5;
+  ax=(ax+dx*8)*3;
+  if(ax==0)break;
+  
+  k=ax;
+  for(j=0;j<=k;j++)
+  {
+   ax=loc;
+   ax=ax*0x343FD;
+   ax+=0x269EC3;
+   loc=ax;
+   ax>>=0x10;
+   ax&=0x7fff;
+  }
+  dx=ax%0x1a+0x41;
+  printf("%c",dx);//计算每位码值
+  ax=dx-psw[i];
+  key[i]=dx;
+  sum+=ax;
+  
+ }
+ printf("\n");
+ getchar();
+ 
+}
+```
+心好累, 不想写了
