@@ -1,9 +1,6 @@
-baseurl: gncy2013.github.io
-gems:
-  - jemoji
-safe: true
-lsi: false
-pygments: true
-markdown: kramdown
+baseurl: ""
+lsi:		false
+highligher:	pygments
+markdown:	kramdown
 kramdown:
   input: GFM

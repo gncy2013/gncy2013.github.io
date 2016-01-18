@@ -7,17 +7,18 @@ tags:
   - ncrackme
 ---
 
-好多年前无聊找东西折腾的时候曾经尝试过破解看雪 CrackMe 板块版主 riijj 写的几个入门的 CrackMe, 但是当时太弱而且相关的东西基本都不会就放弃了 (现在还是好弱啊摔(╯°Д°)╯︵ ┻━┻).  
+好多年前无聊找东西折腾的时候曾经尝试过破解看雪 CrackMe 板块版主 riijj 写的几个入门的 CrackMe, 但是当时太弱而且相关的东西基本都不会就放弃了 (现在还是好弱啊摔(╯°Д°)╯︵ ┻━┻).
 然后这么多年过去了居然又遇到这个程序了, 课上老师正好拿了其中一个 CrackMe 当例子讲, 于是回来自己破, 过程记录下.
 <!-- more -->
-首先是这个 CrackMe 程序的下载链接: [ncrackme](http://pan.baidu.com/s/1pJFHYbh)  
-搭配版主自己写的详解食用风味更佳: [【原创】riijj Crackme (1) 的详解](http://bbs.pediy.com/showthread.php?t=7505)  
-  
-下面是我自己破解过程的记录.  
-先直接打开程序, 随便输几个号码, 点击 Register 之后出现 failed 的消息窗口.  
-接下来就可以打开 OD 加载它, 代码窗口右键搜索名称, 输入 `MessageBox` 就会跳转到消息框的函数在代码中的位置, 按 `F2` 设断点.  
-运行程序, 输入任意内容, 点击 Register, 到达断点, 代码如下  
-```nasm
+首先是这个 CrackMe 程序的下载链接: [ncrackme](http://pan.baidu.com/s/1pJFHYbh)
+搭配版主自己写的详解食用风味更佳: [【原创】riijj Crackme (1) 的详解](http://bbs.pediy.com/showthread.php?t=7505)
+下面是我自己破解过程的记录.
+先直接打开程序, 随便输几个号码, 点击 Register 之后出现 failed 的消息窗口.
+接下来就可以打开 OD 加载它, 代码窗口右键搜索名称, 输入 `MessageBox` 就会跳转到消息框的函数在代码中的位置, 按 `F2` 设断点.
+运行程序, 输入任意内容, 点击 Register, 到达断点, 代码如下
+
+
+```
 CPU Disasm
 Address   Hex dump          Command                                  Comments
 76FFFD1E  /$  8BFF          MOV EDI,EDI                              ; ID_X USER32.MessageBoxA(hOwner,Text,Caption,Type)
@@ -32,8 +33,10 @@ Address   Hex dump          Command                                  Comments
 76FFFD36  |.  5D            POP EBP
 76FFFD37  \.  C2 1000       RETN 10
 ```
-这时按 `F8` 单步执行, 停到 `76FFFD36`, 点击确定按钮后跳到如下代码的 `004010A1` 处  
-```nasm
+
+这时按 `F8` 单步执行, 停到 `76FFFD36`, 点击确定按钮后跳到如下代码的 `004010A1` 处
+
+```
 CPU Disasm
 Address   Hex dump          Command                                  Comments
 00401050  /$  817C24 08 110 CMP DWORD PTR SS:[ARG.2],111             ; HEX ncrackme.00401050(guessed hWnd,Msg,wParam,lParam)
@@ -73,11 +76,13 @@ Address   Hex dump          Command                                  Comments
 004010CE  |>  33C0          XOR EAX,EAX
 004010D0  \.  C2 1000       RETN 10
 ```
-上面的代码里有三个 `MessageBox`, `00401072  |.  75 1B         JNZ SHORT 0040108F` 这一行就是判断点击 Register 后是弹出哪个消息的代码.  
-往上看, `JNZ` 使用的结果来自于 `00401069  |.  85C0          TEST EAX,EAX`. `EAX` 不是 0 则跳到 fail, 如果是 0 则跳到 successful.  
-于是可以简单地把 `JNZ` 改成 `JZ`, 则 key 错误时也会直接弹出 successful 的消息窗口.  
-然而简单的爆破并没有什么卵用, 所以要找到验证密钥的算法, 上面的 `TEST EAX,EAX` 用了 `CALL 00401230` 的返回值, 于是右键选择 Go to 选择 expression 跳到这里. 就是下面这一大坨代码.  
-```asm
+
+上面的代码里有三个 `MessageBox`, `00401072  |.  75 1B         JNZ SHORT 0040108F` 这一行就是判断点击 Register 后是弹出哪个消息的代码.
+往上看, `JNZ` 使用的结果来自于 `00401069  |.  85C0          TEST EAX,EAX`. `EAX` 不是 0 则跳到 fail, 如果是 0 则跳到 successful.
+于是可以简单地把 `JNZ` 改成 `JZ`, 则 key 错误时也会直接弹出 successful 的消息窗口.
+然而简单的爆破并没有什么卵用, 所以要找到验证密钥的算法, 上面的 `TEST EAX,EAX` 用了 `CALL 00401230` 的返回值, 于是右键选择 Go to 选择 expression 跳到这里. 就是下面这一大坨代码.
+
+```
 CPU Disasm
 Address   Hex dump          Command                                  Comments
 00401230  /$  8B0D BC564000 MOV ECX,DWORD PTR DS:[4056BC]
@@ -132,8 +137,10 @@ Address   Hex dump          Command                                  Comments
 00401362  |.  25 FF7F0000   AND EAX,00007FFF                         ; 与 7FFF
 00401367  \.  C3            RETN
 ```
-上面这一堆运算用正常人看着舒服点的样子写就是下面这样  
-```c
+
+上面这一堆运算用正常人看着舒服点的样子写就是下面这样
+
+```
 ECX = name[0] % name[1]  
 ECX = name[2] * (name[0] % name[1])  
 ECX = (name[2] * (name[0] % name[1]) + 1)  
@@ -144,9 +151,7 @@ EAX = ((0xFFFFFFFF / (name[2] * (name[0] % name[1]) + 1)) * 0x343FD + 0x269EC3) 
 EAX = (((0xFFFFFFFF / (name[2] * (name[0] % name[1]) + 1)) * 0x343FD + 0x269EC3) >> 0x10) AND 0x7FFF  
 ```
 
-
-
-```asm
+```
 004012A0  |>  E8 A5000000   /CALL 0040134A                           ; [ncrackme.0040134A
 004012A5  |.  99            |CDQ
 004012A6  |.  B9 1A000000   |MOV ECX,1A
@@ -207,8 +212,9 @@ EAX = (((0xFFFFFFFF / (name[2] * (name[0] % name[1]) + 1)) * 0x343FD + 0x269EC3)
 0040132E  \.  C3            RETN
 ```
 
-还有简单的方法, 打开 IDA Pro, 按 F5, 然后就有 C 语言代码了.  
-```c
+还有简单的方法, 打开 IDA Pro, 按 F5, 然后就有 C 语言代码了, 然后写个 KeyGen 也就不难了.
+
+{% highlight c %}
 if ( GetDlgItemTextA(dword_4056BC, 1000, &String, 16) >= 3 )
   {
     GetDlgItemTextA(dword_4056BC, 1001, v12, 16);
@@ -248,71 +254,6 @@ if ( GetDlgItemTextA(dword_4056BC, 1000, &String, 16) >= 3 )
     result = 1;
   }
   return result;
-```
+{% endhighlight %}
 
-keygen  
-```c
-#include<stdio.h>
-main()
-{
- int i,j,k,len;
- char name[20],psw[20],key[20];
- 
- long ax,cx,sum,dx,loc;
- 
- printf("name:");
- scanf("%s",name);
- 
- sum=0;
- ax=name[0];
- cx=name[1];
- cx=ax%cx;
- loc=0x002266f0;
- ax|=0xffffffff;
- cx=cx*name[2]+1;
- 
- for(i=0;i<0x0f;i++)
- {
-  ax=loc;
-  ax=ax*0x343FD;
-  ax+=0x269EC3;
-  loc=ax;
-  ax>>=0x10;
-  ax&=0x7fff;
-  key[i]=ax%0x1a+0x41;
- }
- 
- len=strlen(name);
- 
- for(i=0;i<len;i++)
- {
-  ax=name[i];
-  ax>>=5;
-  ax&=0x0ff;
-  dx=ax*5;
-  ax=(ax+dx*8)*3;
-  if(ax==0)break;
-  
-  k=ax;
-  for(j=0;j<=k;j++)
-  {
-   ax=loc;
-   ax=ax*0x343FD;
-   ax+=0x269EC3;
-   loc=ax;
-   ax>>=0x10;
-   ax&=0x7fff;
-  }
-  dx=ax%0x1a+0x41;
-  printf("%c",dx);//计算每位码值
-  ax=dx-psw[i];
-  key[i]=dx;
-  sum+=ax;
-  
- }
- printf("\n");
- getchar();
- 
-}
-```
-心好累, 不想写了
+怎么看都觉得写的好烂... 心好累, 不想写了
