@@ -5,7 +5,7 @@ tags:
   - Android
 ---
 
-UPDATE: 新版本已经直接支持导入 Native libs
+UPDATE: 新版本已经直接支持导入 Native libs  
 ~~ 前段时间利用 `libvlcjni.so` 写个播放器, 但是 `Android Studio` 所使用的 `Gradle` 并不支持 NDK. ~~
 ~~ 网上找到的很多方法都挺麻烦的, 于是折腾出以下这个比较奇葩的解决方案.~~
 <!-- more -->
