@@ -1,6 +1,0 @@
-baseurl: ""
-lsi:		false
-highligher:	pygments
-markdown:	kramdown
-kramdown:
-  input: GFM
